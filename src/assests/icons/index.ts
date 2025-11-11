@@ -14,3 +14,4 @@ export { default as Bus } from './Bus.svg';
 export { default as Train } from './Train.svg';
 export { default as Flight } from './Flight.svg';
 export { default as Ship } from './Ship.svg';
+export { default as Eye } from './eye.svg';

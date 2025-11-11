@@ -6,11 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
+  Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import CommonButton from '../components/CommonButton';
+import { saveUser } from '../utils/storage';
+import { Eye } from '../assests/icons';
 
 const SignUpScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -18,19 +23,78 @@ const SignUpScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSignUp = () => {
-    // Navigate to main app
-    if (
-      firstName &&
-      lastName &&
-      email &&
-      password &&
-      password === confirmPassword
-    ) {
-      navigation.navigate('MainApp');
+  const handleSignUp = async () => {
+    // Validate inputs
+    if (!firstName.trim()) {
+      Alert.alert('Error', 'Please enter your first name');
+      return;
+    }
+
+    if (!lastName.trim()) {
+      Alert.alert('Error', 'Please enter your last name');
+      return;
+    }
+
+    if (!email.trim()) {
+      Alert.alert('Error', 'Please enter your email');
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Error', 'Please enter a valid email address');
+      return;
+    }
+
+    if (!password) {
+      Alert.alert('Error', 'Please enter a password');
+      return;
+    }
+
+    if (password.length < 8) {
+      Alert.alert('Error', 'Password must be at least 8 characters');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    // Prepare user data
+    const userData = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      fullName: `${firstName.trim()} ${lastName.trim()}`,
+      email: email.trim().toLowerCase(),
+      password: password,
+    };
+
+    // Save to AsyncStorage
+    const saved = await saveUser(userData);
+
+    if (saved) {
+      setLoading(false);
+
+      // Navigate to SignIn screen after successful signup
+      Alert.alert(
+        'Success',
+        'Account created successfully! Please login with your credentials.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.replace('SignIn'),
+          },
+        ],
+      );
     } else {
-      console.log('Please fill all fields and ensure passwords match');
+      setLoading(false);
+      Alert.alert('Error', 'Failed to create account. Please try again.');
     }
   };
 
@@ -41,11 +105,11 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
-  const EyeIcon = ({ visible, onPress }) => (
-    <TouchableOpacity onPress={onPress} style={styles.eyeIcon}>
-      <Text style={styles.eyeIconText}>{visible ? '👁️' : '👁️‍🗨️'}</Text>
-    </TouchableOpacity>
-  );
+  // const EyeIcon = ({ visible, onPress }) => (
+  //   <TouchableOpacity onPress={onPress} style={styles.eyeIcon}>
+  //     <Text style={styles.eyeIconText}>{visible ? <Eye /> : <Eye />}</Text>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,10 +169,14 @@ const SignUpScreen = ({ navigation }) => {
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
               />
-              <EyeIcon
-                visible={showPassword}
+              <TouchableOpacity
+                style={styles.eyeIcon}
                 onPress={() => setShowPassword(!showPassword)}
-              />
+              >
+                <Text style={styles.eyeIconText}>
+                  {showPassword ? <Eye /> : <Eye />}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Text style={styles.helperText}>
               Must be at least 8 characters.
@@ -126,10 +194,14 @@ const SignUpScreen = ({ navigation }) => {
                 onChangeText={setConfirmPassword}
                 secureTextEntry={!showConfirmPassword}
               />
-              <EyeIcon
-                visible={showConfirmPassword}
+              <TouchableOpacity
+                style={styles.eyeIcon}
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-              />
+              >
+                <Text style={styles.eyeIconText}>
+                  {showPassword ? <Eye /> : <Eye />}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -137,6 +209,8 @@ const SignUpScreen = ({ navigation }) => {
             title="Sign Up"
             onPress={handleSignUp}
             style={styles.signUpButton}
+            loading={loading}
+            disabled={loading}
           />
 
           <View style={styles.logInContainer}>
@@ -231,12 +305,12 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   helperText: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#121212',
     marginTop: 8,
   },
   signUpButton: {
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 24,
   },
   logInContainer: {

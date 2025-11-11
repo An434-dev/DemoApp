@@ -6,18 +6,39 @@
  */
 
 import React from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
 import AppNavigator from './src/navigation/AppNavigator';
+import NetworkAlert from './src/components/NetworkAlert';
+import ErrorBoundary from './src/components/ErrorBoundary';
+import { useNetworkMonitor } from './src/hooks/useNetworkMonitor';
 
-function App() {
+function AppContent() {
   const isDarkMode = useColorScheme() === 'dark';
 
+  // Initialize network monitoring
+  useNetworkMonitor();
+
   return (
-    <SafeAreaProvider>
+    <View style={{ flex: 1 }}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <NetworkAlert />
       <AppNavigator />
-    </SafeAreaProvider>
+    </View>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <AppContent />
+        </SafeAreaProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 

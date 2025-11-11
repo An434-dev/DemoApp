@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 // Import screens
 import SignInScreen from '../screens/SignInScreen';
@@ -12,6 +13,10 @@ import BookingsScreen from '../screens/BookingsScreen';
 import OffersScreen from '../screens/OffersScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { Offer, Profile, Home, Bookings } from '../assests/icons';
+
+// Import storage utilities
+import { isUserLoggedIn, getUser } from '../utils/storage';
+import { setUser } from '../redux/userSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -87,10 +92,45 @@ const MainTabNavigator = () => {
 
 // Main App Navigator with all screens
 const AppNavigator = () => {
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [initialRoute, setInitialRoute] = useState('SignIn');
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const checkLoginStatus = async () => {
+      try {
+        const loggedIn = await isUserLoggedIn();
+        if (loggedIn) {
+          const userData = await getUser();
+          if (userData) {
+            dispatch(setUser(userData));
+            setInitialRoute('MainApp');
+          }
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkLoginStatus();
+  }, [dispatch]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#003B95" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SignIn"
+        initialRouteName={initialRoute}
         screenOptions={{
           headerShown: false,
         }}
@@ -107,6 +147,17 @@ const AppNavigator = () => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#003B95',
+  },
   tabBar: {
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,58 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 import { Hotel, Flight, Train, Ship, Bus, Star } from '../assests/icons';
+import ErrorDisplay from '../components/ErrorDisplay';
+import {
+  fetchProducts,
+  resetProducts,
+  setRefreshing,
+} from '../redux/productSlice';
 
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { products, loading, error, hasMore, refreshing, offset } = useSelector(
+    state => state.products,
+  );
+  const { user } = useSelector(state => state.user);
+  const { isConnected, isInternetReachable } = useSelector(
+    state => state.network,
+  );
+
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const isOffline = !isConnected || !isInternetReachable;
+
+  useEffect(() => {
+    // Fetch initial products only if online
+    if (!isOffline) {
+      dispatch(fetchProducts({ offset: 0, limit: 10 }));
+    }
+  }, [dispatch, isOffline]);
+
+  const handleRefresh = () => {
+    if (isOffline) {
+      return; // Don't try to refresh when offline
+    }
+    dispatch(setRefreshing(true));
+    dispatch(resetProducts());
+    dispatch(fetchProducts({ offset: 0, limit: 10 }));
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore && !loading && !isOffline) {
+      setLoadingMore(true);
+      dispatch(fetchProducts({ offset, limit: 10 })).finally(() => {
+        setLoadingMore(false);
+      });
+    }
+  };
+
   const transportOptions = [
     { id: 1, name: 'Hotels', icon: Hotel },
     { id: 2, name: 'Flights', icon: Flight },
@@ -46,27 +93,6 @@ const HomeScreen = ({ navigation }) => {
       rating: 4.9,
       price: '150',
       image: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400',
-    },
-  ];
-
-  const recommendations = [
-    {
-      id: 1,
-      name: 'Rainforest Kuta',
-      address: 'Jl. Sunset Road No. 101, Kuta, Bali, Indonesia',
-      rating: 4,
-      price: 50,
-      image:
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400',
-    },
-    {
-      id: 2,
-      name: 'Belhotel',
-      address: 'Jl. Sunset Road No. 101, Kuta, Bali, Indonesia',
-      rating: 4,
-      price: 45,
-      image:
-        'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400',
     },
   ];
 
@@ -112,10 +138,22 @@ const HomeScreen = ({ navigation }) => {
 
   const renderRecommendation = ({ item }) => (
     <TouchableOpacity style={styles.recommendationCard}>
-      <Image source={{ uri: item.image }} style={styles.recommendationImage} />
+      <Image
+        source={{
+          uri:
+            item.images?.[0] || item.image || 'https://via.placeholder.com/120',
+        }}
+        style={styles.recommendationImage}
+      />
       <View style={styles.recommendationInfo}>
-        <Text style={styles.recommendationName}>{item.name}</Text>
-        <Text style={styles.recommendationAddress}>{item.address}</Text>
+        <Text style={styles.recommendationName} numberOfLines={1}>
+          {item.title || item.name}
+        </Text>
+        <Text style={styles.recommendationAddress} numberOfLines={2}>
+          {item.description ||
+            item.category?.name ||
+            'No description available'}
+        </Text>
         <View style={styles.recommendationFooter}>
           <View style={styles.starsContainer}>
             <Star
@@ -125,22 +163,75 @@ const HomeScreen = ({ navigation }) => {
               style={styles.starIcon}
             />
             <Text style={styles.recommendationRating}>
-              {item.rating}-star hotel
+              {item.category?.name || 'Product'}
             </Text>
           </View>
         </View>
-        <Text style={styles.recommendationPrice}>$ {item.price}/night</Text>
+        <Text style={styles.recommendationPrice}>$ {item.price}/item</Text>
       </View>
     </TouchableOpacity>
   );
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={styles.footerLoader}>
+        <ActivityIndicator size="small" color="#003B95" />
+        <Text style={styles.footerText}>Loading more products...</Text>
+      </View>
+    );
+  };
+
+  const renderEmpty = () => {
+    if (loading) {
+      return (
+        <View style={styles.emptyContainer}>
+          <ActivityIndicator size="large" color="#003B95" />
+          <Text style={styles.emptyText}>Loading products...</Text>
+        </View>
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={styles.emptyContainer}>
+          <ErrorDisplay error={error} onRetry={handleRefresh} />
+        </View>
+      );
+    }
+
+    if (isOffline) {
+      return (
+        <View style={styles.emptyContainer}>
+          <ErrorDisplay
+            error="You're offline. Please check your internet connection."
+            showRetry={false}
+          />
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No products found</Text>
+      </View>
+    );
+  };
 
   const renderHeader = () => (
     <>
       {/* Header Section */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Text style={styles.welcomeText}>Welcome</Text>
-          <TouchableOpacity>
+          <View>
+            <Text style={styles.welcomeText}>Welcome</Text>
+            {user && (
+              <Text style={styles.userName}>
+                {user.fullName || user.firstName}
+              </Text>
+            )}
+          </View>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
             <Image
               source={{ uri: 'https://i.pravatar.cc/150?img=12' }}
               style={styles.profileImage}
@@ -197,12 +288,24 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor="#1E3A8A" />
       <FlatList
-        data={recommendations}
+        data={products}
         renderItem={renderRecommendation}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item, index) => item.id?.toString() || index.toString()}
         ListHeaderComponent={renderHeader}
+        ListEmptyComponent={renderEmpty}
+        ListFooterComponent={renderFooter}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.mainListContent}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={['#003B95']}
+            tintColor="#003B95"
+          />
+        }
       />
     </SafeAreaView>
   );
@@ -235,6 +338,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  userName: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    marginTop: 4,
+    opacity: 0.9,
   },
   profileImage: {
     width: 50,
@@ -440,6 +549,43 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     color: '#000000',
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  footerText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#6B7280',
+    marginTop: 10,
+  },
+  errorText: {
+    fontSize: 16,
+    color: '#EF4444',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  retryButton: {
+    backgroundColor: '#003B95',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
 

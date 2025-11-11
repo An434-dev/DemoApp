@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Edit,
   Help,
@@ -17,8 +19,14 @@ import {
   Notification,
   Language,
 } from '../assests/icons';
+import { clearUser as clearUserRedux } from '../redux/userSlice';
+import { resetProducts } from '../redux/productSlice';
+import { clearUser } from '../utils/storage';
 
 const ProfileScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector(state => state.user);
+
   const settingsOptions = [
     { id: 1, icon: 'Card', title: 'Your Card' },
     { id: 2, icon: 'Shield', title: 'Security' },
@@ -27,7 +35,32 @@ const ProfileScreen = ({ navigation }) => {
   ];
 
   const handleLogout = () => {
-    navigation.navigate('SignIn');
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            // Clear AsyncStorage
+            await clearUser();
+
+            // Clear Redux state
+            dispatch(clearUserRedux());
+            dispatch(resetProducts());
+
+            // Navigate to SignIn screen
+            navigation.replace('SignIn');
+          },
+        },
+      ],
+      { cancelable: true },
+    );
   };
 
   return (
@@ -45,8 +78,14 @@ const ProfileScreen = ({ navigation }) => {
               style={styles.profileImage}
             />
             <View style={styles.profileTextContainer}>
-              <Text style={styles.profileName}>Brooklyn Simmons</Text>
-              <Text style={styles.profileEmail}>Brooklyn@testmail.com</Text>
+              <Text style={styles.profileName}>
+                {user?.fullName ||
+                  `${user?.firstName || ''} ${user?.lastName || ''}`.trim() ||
+                  'User'}
+              </Text>
+              <Text style={styles.profileEmail}>
+                {user?.email || 'brooklyn@testmail.com'}
+              </Text>
             </View>
           </View>
           <TouchableOpacity style={styles.editButton}>
