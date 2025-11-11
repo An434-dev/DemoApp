@@ -1,0 +1,16 @@
+export { default as Edit } from './EditSquare.svg';
+export { default as Help } from './DangerCircle.svg';
+export { default as Notification } from './IconNotification.svg';
+export { default as Language } from './Language.svg';
+export { default as Shield } from './ShieldIcon.svg';
+export { default as Card } from './Work.svg';
+export { default as Home } from './Home.svg';
+export { default as Bookings } from './Bookings.svg';
+export { default as Offer } from './offer.svg';
+export { default as Profile } from './profile.svg';
+export { default as Star } from './Star.svg';
+export { default as Hotel } from './Hotel.svg';
+export { default as Bus } from './Bus.svg';
+export { default as Train } from './Train.svg';
+export { default as Flight } from './Flight.svg';
+export { default as Ship } from './Ship.svg';
