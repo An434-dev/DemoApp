@@ -15,3 +15,4 @@ export { default as Train } from './Train.svg';
 export { default as Flight } from './Flight.svg';
 export { default as Ship } from './Ship.svg';
 export { default as Eye } from './eye.svg';
+export { default as Search } from './Search.svg';

@@ -1,97 +1,260 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# DemoAppA React Native mobile application with Redux state management, navigation, and API integration.## 📱 Features- **User Authentication**: Sign in and sign up functionality- **Home Screen**: Browse products, explore destinations, and view recommendations- **Network Monitoring**: Real-time network status detection with offline support- **Redux State Management**: Centralized state management for products, users, and network status- **Navigation**: Bottom tab navigation and stack navigation- **Error Handling**: Custom error boundary and error display components- **Product Listing**: Infinite scroll with pull-to-refresh functionality- **SVG Icons**: Custom SVG icons for transport options and UI elements## 🚀 PrerequisitesBefore you begin, ensure you have the following installed:- **Node.js**: >= 20.x ([Download](https://nodejs.org/))- **npm** or **yarn**- **React Native CLI**: `npm install -g react-native-cli`- **Xcode** (for iOS development, macOS only): Latest version from App Store- **Android Studio** (for Android development): [Download](https://developer.android.com/studio)- **CocoaPods** (for iOS, macOS only): `sudo gem install cocoapods`- **Watchman** (recommended): `brew install watchman`> **Note**: Make sure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.## 📦 Installation### 1. Clone the repository`bashgit clone <repository-url>cd Untitled`### 2. Install Node dependencies`bashnpm install# oryarn install`### 3. Install iOS dependencies (macOS only)First, install the Ruby bundler dependencies:`bashbundle install`Then, install CocoaPods dependencies:`bashcd iosbundle exec pod installcd ..`For more information, visit the [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).## 🏃‍♂️ Running the App### Step 1: Start Metro BundlerFirst, start the Metro JavaScript bundler:`bashnpm start# oryarn start`### Step 2: Run the appOpen a new terminal window and run one of the following commands:#### iOS (macOS only)`bashnpm run ios# oryarn ios`To run on a specific simulator:`bashnpx react-native run-ios --simulator="iPhone 15 Pro"`You can also run the app directly from Xcode:1. Open `ios/DemoApp.xcworkspace` in Xcode2. Select your target device/simulator3. Press the Run button (▶️)
 
-# Getting Started
+#### Android
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Make sure you have an Android emulator running or a device connected via USB with USB debugging enabled.
 
-## Step 1: Start Metro
-
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+```bash
 npm run android
-
-# OR using Yarn
+# or
 yarn android
 ```
 
-### iOS
+You can also run the app directly from Android Studio:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+1. Open the `android` folder in Android Studio
+2. Wait for Gradle sync to complete
+3. Select your target device/emulator
+4. Press the Run button (▶️)
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+If everything is set up correctly, you should see your app running in the Android Emulator, iOS Simulator, or your connected device.
 
-```sh
-bundle install
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+npm test
+# or
+yarn test
 ```
 
-Then, and every time you update your native dependencies, run:
+Run tests in watch mode:
 
-```sh
+```bash
+npm test -- --watch
+```
+
+## 🛠️ Project Structure
+
+```
+DemoApp/
+├── src/
+│   ├── assets/
+│   │   └── icons/          # SVG icons (Hotel, Flight, Train, Ship, Bus, Star)
+│   ├── components/         # Reusable components
+│   │   ├── CommonButton.js
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── ErrorDisplay.tsx
+│   │   └── NetworkAlert.tsx
+│   ├── hooks/              # Custom React hooks
+│   │   └── useNetworkMonitor.js
+│   ├── navigation/         # Navigation configuration
+│   │   └── AppNavigator.js
+│   ├── redux/              # Redux store and slices
+│   │   ├── store.js
+│   │   ├── productSlice.js
+│   │   ├── userSlice.js
+│   │   └── networkSlice.js
+│   ├── screens/            # App screens
+│   │   ├── HomeScreen.js
+│   │   ├── SignInScreen.js
+│   │   ├── SignUpScreen.js
+│   │   ├── BookingsScreen.js
+│   │   ├── OffersScreen.js
+│   │   └── ProfileScreen.js
+│   └── utils/              # Utility functions
+│       ├── apiClient.js    # Axios API client
+│       ├── networkMonitor.js
+│       ├── storage.js      # MMKV/AsyncStorage wrapper
+│       └── validation.js
+├── android/                # Android native code
+├── ios/                    # iOS native code
+├── __tests__/              # Test files
+├── App.tsx                 # App entry point
+└── index.js                # Root entry point
+```
+
+## 🔧 Configuration
+
+### API Configuration
+
+Update the API endpoint in `src/utils/apiClient.js`:
+
+```javascript
+const API_BASE_URL = 'https://your-api-endpoint.com/api';
+```
+
+### Environment Variables
+
+You can create environment-specific configurations by modifying the API client or using a library like `react-native-config`.
+
+## 📚 Key Technologies
+
+- **React Native**: 0.82.1
+- **React**: 19.1.1
+- **Redux Toolkit**: ^2.10.1 - State management
+- **React Navigation**: ^7.x - Navigation library
+  - Stack Navigator
+  - Bottom Tabs Navigator
+- **Axios**: ^1.13.2 - HTTP client
+- **React Native SVG**: ^15.14.0 - SVG support
+- **AsyncStorage**: ^2.2.0 - Async storage
+- **NetInfo**: ^11.4.1 - Network connectivity monitoring
+- **MMKV**: ^4.0.0 - High-performance storage
+- **TypeScript**: ^5.8.3
+
+## 🎨 UI Components
+
+The app includes custom components for:
+
+- **ErrorBoundary**: Catches and handles React errors gracefully
+- **ErrorDisplay**: Displays errors with retry functionality
+- **NetworkAlert**: Shows network status alerts
+- **CommonButton**: Reusable button component
+
+## 🔐 State Management
+
+The app uses Redux Toolkit with the following slices:
+
+- **productSlice**: Manages product data, pagination, loading states
+- **userSlice**: Manages user authentication and profile data
+- **networkSlice**: Monitors and manages network connectivity status
+
+## 📱 Navigation Structure
+
+```
+App
+├── Auth Stack
+│   ├── SignIn
+│   └── SignUp
+└── Main Tab Navigator
+    ├── Home
+    ├── Bookings
+    ├── Offers
+    └── Profile
+```
+
+## 🔄 Development Tips
+
+### Fast Refresh
+
+When you save changes to your code, the app will automatically update via Fast Refresh. To force a reload:
+
+- **Android**: Press <kbd>R</kbd> twice or <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS) to open Dev Menu
+- **iOS**: Press <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in the iOS Simulator
+
+### Dev Menu
+
+Access the developer menu:
+
+- **Android**: Shake the device or press <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS)
+- **iOS**: Shake the device or press <kbd>Cmd ⌘</kbd> + <kbd>D</kbd>
+
+## 🐛 Troubleshooting
+
+### iOS Build Issues
+
+```bash
+# Clean and reinstall iOS dependencies
+cd ios
+pod deintegrate
+pod cache clean --all
 bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Android Build Issues
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```bash
+# Clean Android build
+cd android
+./gradlew clean
+cd ..
+npm run android
+```
 
-## Step 3: Modify your app
+### Metro Bundler Issues
 
-Now that you have successfully run the app, let's make changes!
+```bash
+# Reset Metro cache
+npm start -- --reset-cache
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Clear All Caches
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```bash
+# Complete cache reset
+watchman watch-del-all
+rm -rf node_modules
+rm -rf $TMPDIR/react-*
+rm -rf $TMPDIR/metro-*
+npm install
+cd ios && bundle exec pod install && cd ..
+npm start -- --reset-cache
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+### Common Errors
 
-## Congratulations! :tada:
+**Error: Unable to resolve module**
 
-You've successfully run and modified your React Native App. :partying_face:
+- Run `npm install` again
+- Clear Metro cache: `npm start -- --reset-cache`
 
-### Now what?
+**iOS Build Fails**
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- Make sure Xcode Command Line Tools are installed: `xcode-select --install`
+- Check `ios/Podfile.lock` matches dependencies
 
-# Troubleshooting
+**Android Build Fails**
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- Ensure Android SDK is properly installed
+- Check `ANDROID_HOME` environment variable is set
+- Verify Java version (JDK 11 or higher recommended)
 
-# Learn More
+## 📄 Additional Documentation
 
-To learn more about React Native, take a look at the following resources:
+- [FIX_SVG_ICONS.md](./FIX_SVG_ICONS.md) - SVG icon troubleshooting guide
+- [React Native Docs](https://reactnative.dev/docs/getting-started)
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is private and proprietary.
+
+## 🆘 Support
+
+For support:
+
+- Open an issue in the repository
+- Contact the development team
+- Check [React Native troubleshooting guide](https://reactnative.dev/docs/troubleshooting)
+
+## 📚 Learn More
+
+To learn more about React Native and related technologies:
+
+- [React Native Website](https://reactnative.dev)
+- [React Navigation Docs](https://reactnavigation.org/docs/getting-started)
+- [Redux Toolkit Docs](https://redux-toolkit.js.org/)
+- [React Native Blog](https://reactnative.dev/blog)
+
+## 🔄 Version History
+
+- **0.0.1**: Initial release with core features
+  - User authentication
+  - Product browsing
+  - Network monitoring
+  - Redux state management
+
+---
+
+Built with ❤️ using React Native

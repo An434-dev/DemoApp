@@ -13,7 +13,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { Hotel, Flight, Train, Ship, Bus, Star } from '../assests/icons';
+import {
+  Hotel,
+  Flight,
+  Train,
+  Ship,
+  Bus,
+  Star,
+  Search,
+} from '../assests/icons';
 import ErrorDisplay from '../components/ErrorDisplay';
 import {
   fetchProducts,
@@ -241,7 +249,7 @@ const HomeScreen = ({ navigation }) => {
 
         {/* Search Bar */}
         <View style={styles.searchContainer}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Search style={styles.searchIcon} width={24} height={24} />
           <TextInput
             placeholder="Where to go?"
             placeholderTextColor="#9CA3AF"
@@ -382,7 +390,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   transportContainer: {
-    paddingHorizontal: 20,
+    flex: 1,
+    justifyContent: 'center',
     gap: 12,
   },
   transportOption: {
