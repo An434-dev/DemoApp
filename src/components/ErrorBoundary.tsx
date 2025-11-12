@@ -36,9 +36,6 @@ class ErrorBoundary extends Component<Props, State> {
       error,
       errorInfo,
     });
-
-    // You can log the error to an error reporting service here
-    // Example: Sentry.captureException(error, { extra: errorInfo });
   }
 
   handleReset = () => {

@@ -4,7 +4,7 @@ const initialState = {
   isConnected: true,
   isInternetReachable: true,
   type: null,
-  pendingRequests: [], // Store requests that failed due to network issues
+  pendingRequests: [],
 };
 
 const networkSlice = createSlice({

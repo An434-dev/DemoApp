@@ -47,7 +47,6 @@ const ProfileScreen = ({ navigation }) => {
           text: 'Logout',
           style: 'destructive',
           onPress: async () => {
-            // Clear AsyncStorage
             await clearUser();
 
             // Clear Redux state

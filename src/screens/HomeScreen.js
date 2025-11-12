@@ -52,13 +52,16 @@ const HomeScreen = ({ navigation }) => {
 
   const handleRefresh = () => {
     if (isOffline) {
-      return; // Don't try to refresh when offline
+      return;
     }
     dispatch(setRefreshing(true));
     dispatch(resetProducts());
     dispatch(fetchProducts({ offset: 0, limit: 10 }));
   };
 
+  {
+    /* Pagination Handler */
+  }
   const handleLoadMore = () => {
     if (!loadingMore && hasMore && !loading && !isOffline) {
       setLoadingMore(true);

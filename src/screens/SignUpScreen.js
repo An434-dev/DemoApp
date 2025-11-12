@@ -75,7 +75,6 @@ const SignUpScreen = ({ navigation }) => {
       password: password,
     };
 
-    // Save to AsyncStorage
     const saved = await saveUser(userData);
 
     if (saved) {
@@ -99,17 +98,10 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   const handleLogIn = () => {
-    // Navigate to login screen
     if (navigation) {
       navigation.navigate('SignIn');
     }
   };
-
-  // const EyeIcon = ({ visible, onPress }) => (
-  //   <TouchableOpacity onPress={onPress} style={styles.eyeIcon}>
-  //     <Text style={styles.eyeIconText}>{visible ? <Eye /> : <Eye />}</Text>
-  //   </TouchableOpacity>
-  // );
 
   return (
     <SafeAreaView style={styles.container}>

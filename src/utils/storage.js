@@ -6,7 +6,6 @@ export const STORAGE_KEYS = {
   USER_SESSION: 'user_session',
 };
 
-// User storage methods using AsyncStorage
 export const saveUser = async userData => {
   try {
     await AsyncStorage.setItem(
