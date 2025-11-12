@@ -1,4 +1,21 @@
-# DemoAppA React Native mobile application with Redux state management, navigation, and API integration.## 📱 Features- **User Authentication**: Sign in and sign up functionality- **Home Screen**: Browse products, explore destinations, and view recommendations- **Network Monitoring**: Real-time network status detection with offline support- **Redux State Management**: Centralized state management for products, users, and network status- **Navigation**: Bottom tab navigation and stack navigation- **Error Handling**: Custom error boundary and error display components- **Product Listing**: Infinite scroll with pull-to-refresh functionality- **SVG Icons**: Custom SVG icons for transport options and UI elements## 🚀 PrerequisitesBefore you begin,
+# DemoApp
+
+A React Native mobile application with Redux state management, navigation, and API integration.
+
+## 📱 Features
+
+- **User Authentication**: Sign in and sign up functionality
+- **Home Screen**: Browse products, explore destinations, and view recommendations
+- **Network Monitoring**: Real-time network status detection with offline support
+- **Redux State Management**: Centralized state management for products, users, and network status
+- **Navigation**: Bottom tab navigation and stack navigation
+- **Error Handling**: Custom error boundary and error display components
+- **Product Listing**: Infinite scroll with pull-to-refresh functionality
+- **SVG Icons**: Custom SVG icons for transport options and UI elements
+
+## 🚀 Prerequisites
+
+Before you begin,
 
 #### Android
 
