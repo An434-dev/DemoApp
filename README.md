@@ -1,4 +1,4 @@
-# DemoAppA React Native mobile application with Redux state management, navigation, and API integration.## 📱 Features- **User Authentication**: Sign in and sign up functionality- **Home Screen**: Browse products, explore destinations, and view recommendations- **Network Monitoring**: Real-time network status detection with offline support- **Redux State Management**: Centralized state management for products, users, and network status- **Navigation**: Bottom tab navigation and stack navigation- **Error Handling**: Custom error boundary and error display components- **Product Listing**: Infinite scroll with pull-to-refresh functionality- **SVG Icons**: Custom SVG icons for transport options and UI elements## 🚀 PrerequisitesBefore you begin, ensure you have the following installed:- **Node.js**: >= 20.x ([Download](https://nodejs.org/))- **npm** or **yarn**- **React Native CLI**: `npm install -g react-native-cli`- **Xcode** (for iOS development, macOS only): Latest version from App Store- **Android Studio** (for Android development): [Download](https://developer.android.com/studio)- **CocoaPods** (for iOS, macOS only): `sudo gem install cocoapods`- **Watchman** (recommended): `brew install watchman`> **Note**: Make sure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.## 📦 Installation### 1. Clone the repository`bashgit clone <repository-url>cd Untitled`### 2. Install Node dependencies`bashnpm install# oryarn install`### 3. Install iOS dependencies (macOS only)First, install the Ruby bundler dependencies:`bashbundle install`Then, install CocoaPods dependencies:`bashcd iosbundle exec pod installcd ..`For more information, visit the [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).## 🏃‍♂️ Running the App### Step 1: Start Metro BundlerFirst, start the Metro JavaScript bundler:`bashnpm start# oryarn start`### Step 2: Run the appOpen a new terminal window and run one of the following commands:#### iOS (macOS only)`bashnpm run ios# oryarn ios`To run on a specific simulator:`bashnpx react-native run-ios --simulator="iPhone 15 Pro"`You can also run the app directly from Xcode:1. Open `ios/DemoApp.xcworkspace` in Xcode2. Select your target device/simulator3. Press the Run button (▶️)
+# DemoAppA React Native mobile application with Redux state management, navigation, and API integration.## 📱 Features- **User Authentication**: Sign in and sign up functionality- **Home Screen**: Browse products, explore destinations, and view recommendations- **Network Monitoring**: Real-time network status detection with offline support- **Redux State Management**: Centralized state management for products, users, and network status- **Navigation**: Bottom tab navigation and stack navigation- **Error Handling**: Custom error boundary and error display components- **Product Listing**: Infinite scroll with pull-to-refresh functionality- **SVG Icons**: Custom SVG icons for transport options and UI elements## 🚀 PrerequisitesBefore you begin,
 
 #### Android
 
@@ -212,40 +212,6 @@ npm start -- --reset-cache
 - Ensure Android SDK is properly installed
 - Check `ANDROID_HOME` environment variable is set
 - Verify Java version (JDK 11 or higher recommended)
-
-## 📄 Additional Documentation
-
-- [FIX_SVG_ICONS.md](./FIX_SVG_ICONS.md) - SVG icon troubleshooting guide
-- [React Native Docs](https://reactnative.dev/docs/getting-started)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is private and proprietary.
-
-## 🆘 Support
-
-For support:
-
-- Open an issue in the repository
-- Contact the development team
-- Check [React Native troubleshooting guide](https://reactnative.dev/docs/troubleshooting)
-
-## 📚 Learn More
-
-To learn more about React Native and related technologies:
-
-- [React Native Website](https://reactnative.dev)
-- [React Navigation Docs](https://reactnavigation.org/docs/getting-started)
-- [Redux Toolkit Docs](https://redux-toolkit.js.org/)
-- [React Native Blog](https://reactnative.dev/blog)
 
 ## 🔄 Version History
 
